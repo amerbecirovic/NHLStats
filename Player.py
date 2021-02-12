@@ -1,6 +1,30 @@
+import import_data
+
 
 class Player:
-    def __init__(self, name, age):
+    def __init__(self, name):
         self.name = name
-        self.age = age
-        print("Player: {}, Age: {}".format(self.name, self.age))
+        goals = self.get_goals()
+        assists = self.get_assists()
+        points = self.get_points()
+        age = self.get_age()
+
+        print("{name}, {age} \n {goals}, {assists}, {points}"
+              .format(name=self.name, age=age, goals=goals, assists=assists, points=points))
+
+    def get_age(self):
+        age = import_data.roster_gap_data[self.name][0]
+        return age
+
+    def get_goals(self):
+        goals = import_data.roster_gap_data[self.name][1]
+        return goals
+
+    def get_assists(self):
+        assists = import_data.roster_gap_data[self.name][2]
+        return assists
+
+    def get_points(self):
+        points = import_data.roster_gap_data[self.name][3]
+        return points
+

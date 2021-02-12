@@ -19,7 +19,6 @@ def get_player_ids(roster_data):
     player_ids = []
     for i in range(0, roster_count):
         player_ids.append(roster_data['roster'][i]['person']['id'])
-    print(player_ids)
     return player_ids
 
 
@@ -31,17 +30,40 @@ def get_player_data(ids):
     player_list = []
     for id in ids:
         player_request = requests.get("https://statsapi.web.nhl.com/api/v1/people/" + str(id) + "?hydrate=stats("
-                                      "splits=statsSingleSeason)")
+                                                                                                "splits=statsSingleSeason)")
         player_list.append(create_dict(json.dumps(player_request.json())))
-
-    print(player_list)
     return player_list
-
 
 
 player_data = get_player_data(player_ids)
 
-# just Kase
-# print(roster_dict['roster'][0]['person']['id'])
-# print(roster_dict)
-# print(len(roster_dict['roster']))
+# function to get goals, assists, points, and age for each skater on the roster, in the form of:
+# {"Player Name": [Age: W, Goals: X, Assists: Y, Points: Z]}
+# separate function for goalies
+
+def get_gap_data_skaters(player_list):
+    gap_data = {}
+
+    for i in range(0, len(player_list)):
+
+        position_code = player_list[i]['people'][0]['primaryPosition']['code']
+        player_name = player_list[i]['people'][0]['fullName']
+        age = player_data[i]['people'][0]['currentAge']
+
+        if position_code != "G":
+            try:
+                player_data[i]['people'][0]['stats'][0]['splits'][0]['stat']['points']
+                goals = player_data[i]['people'][0]['stats'][0]['splits'][0]['stat']['goals']
+                assists = player_data[i]['people'][0]['stats'][0]['splits'][0]['stat']['assists']
+                points = player_data[i]['people'][0]['stats'][0]['splits'][0]['stat']['points']
+                # print(position_code)
+                # print(goals)
+                gap_data[player_name] = ["Age: " + str(age), "Goals: " + str(goals), "Assists: " + str(assists), "Points: " + str(points)]
+            except IndexError:
+                gap_data[player_name] = ["Goals: N/A", "Assists: N/A", "Points: N/A"]
+
+    # print(gap_data)
+    return gap_data
+
+
+roster_gap_data = get_gap_data_skaters(player_data)
