@@ -9,7 +9,7 @@ class Player:
         points = self.get_points()
         age = self.get_age()
 
-        print("{name}, {age} \n {goals}, {assists}, {points}"
+        print("\n{name}, {age} \n {goals}, {assists}, {points}\n"
               .format(name=self.name, age=age, goals=goals, assists=assists, points=points))
 
     def get_age(self):

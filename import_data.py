@@ -3,7 +3,7 @@ import json
 
 response = requests.get("https://statsapi.web.nhl.com/api/v1/teams/6/roster")
 
-print("Get request status code: " + str(response.status_code))
+# print("Get request status code: " + str(response.status_code))
 
 
 def create_dict(obj):
