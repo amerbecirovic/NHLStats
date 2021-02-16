@@ -1,6 +1,9 @@
 import requests
 import json
 
+from Player import Player
+from Team import Team
+
 
 def get_all_teams():
     raw_data = []
@@ -76,4 +79,26 @@ class Import:
 
         return gap_data
 
+    # creates Team object for selected team
+    def create_team(self):
+        all_teams = get_all_teams()
+        selected_team_id = self.team
 
+        team_object = None
+        for team_name, team_id in all_teams.items():
+            if selected_team_id == team_id:
+                team_object = Team(team_name, self.create_players())
+
+        return team_object
+
+    # creates Player objects for each player on the active roster for the selected team.
+    def create_players(self):
+        players = self.player_gap_data
+        player_objects = []
+        for player_name, data in players.items():
+            player_objects.append(Player(player_name, data[0], data[1:]))
+        return player_objects
+
+
+#bruins = Import(6)
+#bruins.create_team()

@@ -1,30 +1,18 @@
-import import_data
-from import_data import Import
-
 
 class Player:
-    def __init__(self, name):
+    def __init__(self, name, age, data):
         self.name = name
-        goals = self.get_goals()
-        assists = self.get_assists()
-        points = self.get_points()
-        age = self.get_age()
-
-        print("\n{name}, {age} \n{goals}, {assists}, {points}\n"
-              .format(name=self.name, age=age, goals=goals, assists=assists, points=points))
+        self.age = age
+        self.data = data
 
     def get_age(self):
-        age = import_obj.player_gap_data[self.name][0]
-        return age
+        return self.age
 
     def get_goals(self):
-        goals = import_obj.player_gap_data[self.name][1]
-        return goals
+        return self.data[0]
 
     def get_assists(self):
-        assists = import_obj.player_gap_data[self.name][2]
-        return assists
+        return self.data[1]
 
     def get_points(self):
-        points = import_obj.player_gap_data[self.name][3]
-        return points
+        return self.data[2]
