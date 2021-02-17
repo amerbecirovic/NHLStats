@@ -27,14 +27,5 @@ class Team:
             player_name = player_obj.name
             if player == player_name:
                 print("\n{name}, {age} \n{data}\n".format(name=player_obj.name, age=player_obj.age, data=player_obj.data))
-'''
 
-    def get_venue(self):
-        pass
 
-    def get_conference(self):
-        pass
-
-    def get_division(self):
-        pass
-'''

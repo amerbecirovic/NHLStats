@@ -21,6 +21,8 @@ def create_dict(response):
     raw_data_dict = json.loads(json.dumps(response.json()))
     return raw_data_dict
 
+# code to get all of tonight's matchups, for use in the prediction algorithm in NHLStats.
+
 
 class Import:
     def __init__(self, team_number):
@@ -99,6 +101,3 @@ class Import:
             player_objects.append(Player(player_name, data[0], data[1:]))
         return player_objects
 
-
-#bruins = Import(6)
-#bruins.create_team()

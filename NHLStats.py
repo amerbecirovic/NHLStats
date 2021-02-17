@@ -1,7 +1,16 @@
 import import_data
 from import_data import Import
-from Player import Player
-from Team import Team
+
+from TeamStats import TeamStats
+
+from numpy import random
+from numpy import std
+from numpy import mean
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+import pickle
 
 
 # get all 31 teams in dictionary form {Team: NHL API ID} from import_data to preserve ID numbers for API access.
@@ -57,10 +66,89 @@ def get_player(player_number):
             get_player(int(new_input))
 
 
+'''
 unsorted_teams, sorted_teams = init_teams()
 select_team = input("\nPlease choose a team's corresponding number: ")
 
-roster_dict, team= init_roster(int(select_team) - 1)
+roster_dict, team = init_roster(int(select_team) - 1)
 
 select_player = input("\nPlease choose a player's corresponding number: ")
 get_player(int(select_player))
+'''
+
+'''
+start of creating an algorithm to predict game winners. algorithm will be some combo of save percentage, 
+expected goals, special team rankings, and shooting percentage. normal distributions best way to go.
+easy math. All matchups for the night will be displayed. The format will be something like:
+XX% Team 1 vs Team 2 YY% where XX% and YY% are their respective chances to win based on the below function.
+'''
+
+
+# First, need to get ALL teams data for each statistic. Turn each statistic into a normal distribution
+# for the league.
+
+
+def normal_distributions():
+    # create a dictionary for storage of team stats for each team. Form of "Team Name": [Stats]
+    # commented out for high runtime, added data persistence.
+    '''
+    team_stats = {}
+    for team in import_data.get_all_teams():
+        team_stats[team] = TeamStats(team)
+
+    # break out each individual stat into a list of that stat for every team.
+    league_shooting_pcts = []
+    league_save_pcts = []
+    league_pp_pcts = []
+    league_pk_pcts = []
+    for stats in team_stats.values():
+        league_shooting_pcts.append(stats.shooting_pct)
+        league_save_pcts.append(stats.save_pct)
+        league_pp_pcts.append(float(stats.pp_pct))
+        league_pk_pcts.append(float(stats.pk_pct))
+
+    data = {'shooting_pct': league_shooting_pcts,
+            'save_pct': league_save_pcts,
+            'pp_pct': league_pp_pcts,
+            'pk_pct': league_pk_pcts}
+
+    with open(filename, 'wb') as fi:
+        pickle.dump(data, fi, pickle.HIGHEST_PROTOCOL)
+    '''
+    with open(filename, 'rb') as fi:
+        league_data = pickle.load(fi)
+
+    print(league_data)
+
+    # calculate mean and std deviation for each stat
+    mean_shooting_pct = mean(league_data['shooting_pct'])
+    std_shooting_pct = std(league_data['shooting_pct'])
+
+    mean_save_pct = mean(league_data['save_pct'])
+    std_save_pct = std(league_data['save_pct'])
+
+    mean_pp_pct = mean(league_data['pp_pct'])
+    std_pp_pct = std(league_data['pp_pct'])
+
+    mean_pk_pct = mean(league_data['pk_pct'])
+    std_pk_pct = std(league_data['pk_pct'])
+
+    # create normal distributions
+    norm_shooting_pct = random.normal(loc=mean_shooting_pct, scale=std_shooting_pct, size=1000)
+    norm_save_pct = random.normal(loc=mean_save_pct, scale=std_save_pct, size=1000)
+    norm_pp_pct = random.normal(loc=mean_pp_pct, scale=std_pp_pct, size=1000)
+    norm_pk_pct = random.normal(loc=mean_pk_pct, scale=std_pk_pct, size=1000)
+
+    return norm_shooting_pct, norm_save_pct, norm_pp_pct, norm_pk_pct
+
+
+filename = 'league_stats.pk'
+
+norm1, norm2, norm3, norm4 = normal_distributions()
+
+sns.distplot(norm1, hist=True)
+# sns.distplot(norm2, hist=True)
+# sns.distplot(norm3, hist=True)
+# sns.distplot(norm4, hist=True)
+
+plt.show()
